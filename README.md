@@ -1,3 +1,10 @@
+# About this Fork
+
+I needed the terminal settings to be modifyable at runtime from external applications. Now the terminal exposes an IPC route that can be used by external appliacation to control the effects dynamically (i.e. simulating gradual terminal corruption over time).
+
+A python client can be found at [terminal_controller.py](/terminal_controller.py).
+
+
 # cool-retro-term
 
 |> Default Amber|C:\ IBM DOS|$ Default Green|

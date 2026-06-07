@@ -21,6 +21,7 @@ private:
     void processMessage(const QByteArray &data);
     void applyObject(const QJsonObject &object);
     QVariant jsonValueToVariant(const QJsonValue &value) const;
+    bool loadProfileByName(const QString &profileName);
 };
 
 #endif // UDP_IPC_SERVER_H

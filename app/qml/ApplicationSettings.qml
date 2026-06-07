@@ -709,6 +709,16 @@ QtObject {
         return -1
     }
 
+    function loadProfileByName(name) {
+        var profileIndex = getProfileIndexByName(name)
+        if (profileIndex !== -1) {
+            loadProfile(profileIndex)
+            return true
+        }
+        console.log("Warning: selected profile is not valid; ignoring it")
+        return false
+    }
+
     Component.onCompleted: {
         // Manage the arguments from the QML side.
         var args = Qt.application.arguments

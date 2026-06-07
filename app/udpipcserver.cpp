@@ -45,8 +45,15 @@ void UdpIpcServer::processMessage(const QByteArray &data)
 
     QJsonObject rootObject = document.object();
 
-    if (rootObject.contains("profile") && rootObject.value("profile").isObject()) {
-        applyObject(rootObject.value("profile").toObject());
+    if (rootObject.contains("profile")) {
+        QJsonValue profileValue = rootObject.value("profile");
+        if (profileValue.isObject()) {
+            applyObject(profileValue.toObject());
+        } else if (profileValue.isString()) {
+            if (!loadProfileByName(profileValue.toString())) {
+                qWarning() << "UDP IPC: profile not found:" << profileValue.toString();
+            }
+        }
     }
     if (rootObject.contains("settings") && rootObject.value("settings").isObject()) {
         applyObject(rootObject.value("settings").toObject());
@@ -63,6 +70,39 @@ void UdpIpcServer::processMessage(const QByteArray &data)
             }
         }
     }
+}
+
+bool UdpIpcServer::loadProfileByName(const QString &profileName)
+{
+    if (!m_appSettings)
+        return false;
+
+    QVariant loadedResult;
+    bool invoked = QMetaObject::invokeMethod(m_appSettings,
+                                             "loadProfileByName",
+                                             Q_RETURN_ARG(QVariant, loadedResult),
+                                             Q_ARG(QVariant, profileName));
+    if (invoked)
+        return loadedResult.toBool();
+
+    QVariant profileIndexResult;
+    bool found = QMetaObject::invokeMethod(m_appSettings,
+                                           "getProfileIndexByName",
+                                           Q_RETURN_ARG(QVariant, profileIndexResult),
+                                           Q_ARG(QVariant, profileName));
+    if (found) {
+        int profileIndex = profileIndexResult.toInt();
+        if (profileIndex >= 0) {
+            QVariant loadResult;
+            bool loadInvoked = QMetaObject::invokeMethod(m_appSettings,
+                                                          "loadProfile",
+                                                          Q_RETURN_ARG(QVariant, loadResult),
+                                                          Q_ARG(QVariant, profileIndex));
+            return loadInvoked ? loadResult.toBool() : false;
+        }
+    }
+
+    return false;
 }
 
 void UdpIpcServer::applyObject(const QJsonObject &object)

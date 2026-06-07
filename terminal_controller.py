@@ -15,9 +15,13 @@ class TerminalController:
             data = str(payload).encode('utf-8')
         self.sock.sendto(data, (self.host, self.port))
 
-    def set_profile(self, profile: dict):
+    def set_profile_from_dict(self, profile: dict):
         # Send full profile object
         self._send(json.dumps({"profile": profile}))
+
+    def set_profile(self, profile_name: str):
+        # Send an existing profile name saved inside the terminal
+        self._send(json.dumps({"profile": profile_name}))
 
     def set_settings(self, settings: dict):
         self._send(json.dumps({"settings": settings}))
@@ -47,4 +51,7 @@ if __name__ == '__main__':
     # Quick demo
     print("hello")
     tc = TerminalController()
+    tc.set_profile("custom1")
     simulate_corruption(tc, 1)
+    import time
+    time.sleep(1)
