@@ -13,6 +13,7 @@
 
 #include <QFontDatabase>
 #include <QLoggingCategory>
+#include "udpipcserver.h"
 
 #include <fileio.h>
 #include <monospacefontmanager.h>
@@ -117,6 +118,14 @@ int main(int argc, char *argv[])
     if (engine.rootObjects().isEmpty()) {
         qDebug() << "Cannot load QML interface";
         return EXIT_FAILURE;
+    }
+
+    QObject *rootObject = engine.rootObjects().first();
+    QObject *appSettingsObject = rootObject->findChild<QObject *>("appSettings");
+    if (appSettingsObject) {
+        new UdpIpcServer(appSettingsObject, 55432, &app);
+    } else {
+        qWarning() << "UDP IPC: could not find appSettings object";
     }
 
     // Quit the application when the engine closes.

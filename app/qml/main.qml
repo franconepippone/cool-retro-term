@@ -139,6 +139,7 @@ ApplicationWindow {
     }
     ApplicationSettings {
         id: appSettings
+        objectName: "appSettings"
     }
     TerminalContainer {
         id: terminalContainer
