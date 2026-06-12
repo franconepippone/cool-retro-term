@@ -1,6 +1,6 @@
 # About this Fork
 
-I needed the terminal settings to be modifyable at runtime from external applications. Now the terminal exposes an IPC udp port that can be used by external applications to control the effects dynamically (i.e. simulating gradual terminal corruption over time).
+I needed the terminal settings to be modifiable at runtime from external applications. Now the terminal exposes an IPC udp port that can be used by external applications to control the effects dynamically (i.e. simulating gradual terminal corruption over time).
 
 A python client can be found at [terminal_controller.py](/terminal_controller.py).
 
